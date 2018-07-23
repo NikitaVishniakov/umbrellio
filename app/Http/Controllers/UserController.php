@@ -33,9 +33,10 @@ class UserController extends Controller
       $ipCollection = $users->groupBy('ip');
       $arrResult = [];
       foreach ($ipCollection as $key => $ip){
-          $tmp['ip'] = $key;
+          $tmp['type'] = 'user_ips';
+          $tmp['attributes']['ip'] = $key;
           foreach ($ip as $user){
-              $tmp['authors'][] = ['id' => $user->id, 'login' => $user->login];
+              $tmp['relationships']['author']['data'][] =  ['id' => $user->id, 'login' => $user->login];
           }
           $arrResult['data'][] = $tmp;
       }

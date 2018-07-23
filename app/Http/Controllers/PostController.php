@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddPost;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\PostsResource;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\UserIp;
@@ -54,8 +56,8 @@ class PostController extends Controller
                 'error' => $e->getMessage(),
             ], self::INTERNAL_ERROR);
         }
-
-        return response()->json($post->loadMissing(['user', 'user_ip']), self::CREATED);
+        $json = new PostResource($post);
+        return response()->json($json, self::CREATED);
     }
 
 
@@ -89,7 +91,8 @@ class PostController extends Controller
 
 
         if($posts){
-            return response()->json($posts,self::OK);
+            $json = new PostsResource($posts);
+            return response()->json($json,self::OK);
         }
 
         return response(null, self::NO_DATA);

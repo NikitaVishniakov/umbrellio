@@ -59,6 +59,6 @@ FROM (select *,
         END add_group
         FROM users
         ORDER BY id) sq
-GROUP BY real_group, group_id
+GROUP BY add_group, group_id
 ORDER BY min_id;
 ```

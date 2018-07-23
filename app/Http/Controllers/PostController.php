@@ -8,7 +8,6 @@ use App\Http\Resources\PostsResource;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\UserIp;
-use Faker\Factory;
 
 class PostController extends Controller
 {
@@ -43,7 +42,7 @@ class PostController extends Controller
         $arrPost = $request->only('header', 'content', 'user_ip');
         $user = $this->getUserInstance($request->only('login'));
 
-        $ip_v = $request->input('user_ip') ?? $request->getClientIp();
+        $ip_v = $request->input('ip') ?? $request->getClientIp();
         $ip = $this->getUserIpInstance($user, $ip_v);
         $arrPost['user_ip_id'] = $ip->id;
 

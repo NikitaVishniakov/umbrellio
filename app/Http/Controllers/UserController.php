@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserIp;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
     /**
-     * API ENDPOINT: GET /ips/authors
+     * Get grouped users by ip
      *
+     * API ENDPOINT: GET /ips/authors
      *
      * @return \Illuminate\Http\JsonResponse
      */

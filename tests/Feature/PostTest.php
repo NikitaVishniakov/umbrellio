@@ -36,11 +36,11 @@ class PostTest extends TestCase
 
         $response
             ->assertStatus(201)
-            ->assertJson([
-                'header' => $postData['header'],
-                'content' => $postData['content'],
-                'user' => [
-                    'login' => $user
+            ->assertJsonStructure([
+               'type',
+                'attributes' => [
+                    'header',
+                    'content'
                 ]
             ]);
     }

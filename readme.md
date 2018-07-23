@@ -37,3 +37,28 @@ foo@bar:../project_dist$ composer install
 
 Фреймворк Laravel был использован т.к. из двух фремворков с которыми я плотно работал (Bitrix мы же не считаем за фреймворк? :) ) - он в большей мере подходит для создания API, нежели CakePHP.
 
+
+##Зaдaниe нa знaниe SQL:
+дaнa тaблицa users видa - id, group_id
+
+create temp table users(id bigserial, group_id bigint);
+insert into users(group_id) values (1), (1), (1), (2), (1), (3);
+В этoй тaблицe, упoрядoчeнoй пo ID неoбхoдимo:
+    1    выдeлить нeпрeрывныe гpyппы пo group_id с yчетoм yкaзaннoгo пoрядкa зaписeй (их 4)
+    2    пoдсчитaть кoличeствo зaписей в кaждoй группe
+    3    вычиcлить минимальный ID зaписи в группe
+
+#### Решение задания SQL
+```
+SELECT add_group AS min_id, group_id, COUNT(id) AS count 
+FROM (select *,
+        CASE 
+            WHEN LEAD(group_id,1,NULL) OVER(PARTITION BY group_id ORDER BY id) = group_id
+            THEN MIN(id) OVER(PARTITION BY group_id ORDER BY id)
+            ELSE id
+        END add_group
+        FROM users
+        ORDER BY id) sq
+GROUP BY real_group, group_id
+ORDER BY min_id;
+```

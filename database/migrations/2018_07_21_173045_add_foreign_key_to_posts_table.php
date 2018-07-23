@@ -15,6 +15,7 @@ class AddForeignKeyToPostsTable extends Migration
     {
         Schema::table('posts', function (Blueprint $table) {
             $table->foreign('user_id', 'fk_posts_user_id')->references('id')->on('users')->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->foreign('user_ip_id', 'fk_posts_user_ip_id')->references('id')->on('user_ips')->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
 
@@ -27,6 +28,7 @@ class AddForeignKeyToPostsTable extends Migration
     {
         Schema::table('posts', function (Blueprint $table) {
             $table->drop('fk_posts_user_id');
+            $table->drop('fk_posts_user_ip_id');
         });
     }
 }

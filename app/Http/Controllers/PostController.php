@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddPost;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\UserIp;
+use Faker\Factory;
 
 class PostController extends Controller
 {
@@ -35,11 +37,13 @@ class PostController extends Controller
      */
     public function add(AddPost $request) {
 
-        $user = $this->getUserInstance($request->only('login'));
-
         //Collecting array with the post data
         $arrPost = $request->only('header', 'content', 'user_ip');
-        $arrPost['user_ip'] = $arrPost['user_ip'] ?? $request->getClientIp();
+        $user = $this->getUserInstance($request->only('login'));
+
+        $ip_v = $request->input('user_ip') ?? $request->getClientIp();
+        $ip = $this->getUserIpInstance($user, $ip_v);
+        $arrPost['user_ip_id'] = $ip->id;
 
         //Trying to save post (may be some sql/db errors while saving)
         try {
@@ -51,7 +55,7 @@ class PostController extends Controller
             ], self::INTERNAL_ERROR);
         }
 
-        return response()->json($post->loadMissing(['user']), self::CREATED);
+        return response()->json($post->loadMissing(['user', 'user_ip']), self::CREATED);
     }
 
 
@@ -100,6 +104,17 @@ class PostController extends Controller
      */
     private function getUserInstance(array $userData): User{
         return User::firstOrCreate($userData);
+    }
+
+    /**
+     * Get UserIP obj from db or create a new one if there no records with data provided
+     *
+     * @param array $userData
+     *
+     * @return User
+     */
+    private  function getUserIpInstance(User $user, string $ip) : UserIp{
+        return UserIp::firstOrCreate(['user_id' => $user->id, 'ip' => $ip]);
     }
 
 }
